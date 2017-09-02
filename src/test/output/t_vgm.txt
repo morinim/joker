@@ -1,0 +1,46 @@
+Posizione  1: 15384615 m/s,        0 c/s
+Posizione  2: 26666666 m/s, 12499999 c/s
+Posizione  3: 25624999 m/s, 12499999 c/s
+Posizione  4: 23448275 m/s,  5714285 c/s
+Posizione  5: 18666666 m/s,  4444444 c/s
+Posizione  6: 27096774 m/s,  6666666 c/s
+Posizione  7: 28108108 m/s,  6666666 c/s
+Posizione  8: 28000000 m/s,  6666666 c/s
+Posizione  9: 27499999 m/s,  9999999 c/s
+Posizione 10: 26111111 m/s,  4999999 c/s
+Posizione 11: 29999999 m/s, 10000000 c/s
+Posizione 12: 21052631 m/s, 16666666 c/s
+Posizione 13: 28695652 m/s,  4999999 c/s
+Posizione 14: 21333333 m/s,        0 c/s
+Posizione 15: 23529411 m/s,  4999999 c/s
+Posizione 16: 29090909 m/s,  7999999 c/s
+Posizione 17: 25142857 m/s,  9999999 c/s
+Posizione 18: 22499999 m/s,  9999999 c/s
+Posizione 19: 22162162 m/s,  8333333 c/s
+Posizione 20: 22790697 m/s,  5454545 c/s
+Posizione 21: 29473684 m/s,        0 c/s
+Posizione 22: 21874999 m/s,  9999999 c/s
+Posizione 23: 17499999 m/s,        0 c/s
+Posizione 24: 21935483 m/s,  7499999 c/s
+Posizione 25: 27200000 m/s,  6666666 c/s
+Posizione 26: 24999999 m/s,  9999999 c/s
+Posizione 27: 14285714 m/s,        0 c/s
+Posizione 28: 20000000 m/s,  6666666 c/s
+Posizione 29: 21025641 m/s,  8888888 c/s
+Posizione 30: 22142857 m/s, 11111111 c/s
+Posizione 31: 17894736 m/s,        0 c/s
+Posizione 32: 27368421 m/s,  9999999 c/s
+Posizione 33: 26999999 m/s,  3999999 c/s
+Posizione 34: 24571428 m/s,  8888888 c/s
+Posizione 35: 19999999 m/s,  6666666 c/s
+Posizione 36: 25624999 m/s,  6666666 c/s
+Posizione 37: 23030303 m/s, 10909090 c/s
+Posizione 38: 18571428 m/s,        0 c/s
+Posizione 39: 21176470 m/s,  8333333 c/s
+Posizione 40: 24848484 m/s,  4999999 c/s
+Posizione 41: 25405405 m/s,  4999999 c/s
+
+--------------------------------------------------
+
+Velocita' media: 24242957 m/s, 7375886 c/s
+Media mosse: 33 m/pos, 2 c/pos

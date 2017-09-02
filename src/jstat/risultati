@@ -1,0 +1,42 @@
+***************************
+* Static analysis results *
+***************************
+
+PHASE: OPENING.
+Min overall positional valutation:  -162.
+Max overall positional valutation:   171.
+  Components:
+    valutation[0] min: -1300, max:  1300.
+    valutation[1] min:   -86, max:   119.
+    valutation[2] min:   -60, max:    60.
+    valutation[3] min:   -74, max:    80.
+  Partial sums
+    3 components: min= -162, max=  171.
+    2 components: min= -114, max=  120.
+    1 components: min=  -74, max=   80.
+
+PHASE: MIDDLEGAME.
+Min overall positional valutation:  -246.
+Max overall positional valutation:   316.
+  Components:
+    valutation[0] min: -2900, max:  1400.
+    valutation[1] min:  -109, max:   129.
+    valutation[2] min:   -60, max:    60.
+    valutation[3] min:  -158, max:   336.
+  Partial sums
+    3 components: min= -246, max=  316.
+    2 components: min= -193, max=  336.
+    1 components: min= -158, max=  336.
+
+PHASE: ENDING.
+Min overall positional valutation:  -593.
+Max overall positional valutation:   795.
+  Components:
+    valutation[0] min:  -900, max:  2200.
+    valutation[1] min:   -62, max:    85.
+    valutation[2] min:   -60, max:    60.
+    valutation[3] min:  -606, max:   790.
+  Partial sums
+    3 components: min= -593, max=  795.
+    2 components: min= -606, max=  790.
+    1 components: min= -606, max=  790.

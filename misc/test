@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Esegue una serie di test registrandone i risultati.
+
+for i in $*
+do
+        sync
+        test_ricerca $i
+        cd test/output
+        mv t_ricerca.txt t_ricerca.$i.txt
+        cd ../..
+done
+

@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Indiviadua le risposte scorrette in una suite di test.
+
+fgrep \? $1 | awk '{print $1}'

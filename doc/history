@@ -1,0 +1,1270 @@
+01/9/20  Risolto problema di interfacciamento con Xboard: vengono ora accettate
+         anche le sotto-promozioni.
+01/9/19  Bonus per Cavallo bloccatore (il pezzo deve essere su una casa forte).
+01/9/10  Corretto bug nell'identificazione di posizione di patta per mancanza
+         di materiale: appena una giocatore rimaneva con un solo pezzo (fosse
+         anche la Donna o la Torre) veniva dichiarata la patta.
+01/9/5   Eliminato bug nel file configurazione.h che portava a non utilizzare
+         la miglior versione di bitboard::count per l'architettura Intel.
+01/9/4   Nuovi termini per la valutazione dell'Alfiere:
+         - nel finale l'Alfiere riceve un bonus in presenza di Pedoni nemici
+           passati;
+         - penalizzazione proporzionale al numero di propri Pedoni presenti nel
+           grande centro su case dello stesso colore dell'Alfiere.
+01/8/30  Numerose piccole modifiche al modulo libro_apertura (in particolare
+         introdotta la modalita' learn).
+01/8/29  Estensione graduale del limite inferiore della finestra alpha-beta in
+         caso di fail low.
+01/8/26  Come sempre l'impatto con una nuova versione del compilatore (gcc
+         3.0.1) e' brutale: il codice, improvvisamente, era piu' lento del 30%!
+         Dopo alcune modifiche alle funzioni del modulo situazione_valutata ed
+         alcuni test con i vari switch di ottimizzazione (molto importante 
+         -finline-limit) la situazione e' risultata migliore di quella
+         originale.
+01/8/25  Creata una nuova funzione per la valutazione dello stato di sviluppo
+         dei pezzi (e conseguentemente semplificata la funzione 
+         v_disposizioe_pezzi). Introdotto un nuovo termine per penalizzare lo
+         sviluppo precoce della Donna.
+01/8/22  Nessuna estensione del tempo di ricerca in caso di fail high sulla
+         prima mossa della variante principale (la si giochera' in ogni caso
+         e quindi non e' cosi' importante stabilirne una valutazione esatta).
+01/8/21  Numerose piccole modifiche al codice per migliorarne la leggibilita'.
+01/7/28  Estensione graduale del limite superiore della finestra alpha-beta in
+         caso di fail high; in questi casi, oltre al vantaggio di effetture 
+         ricerche con finestra piu' ristretta, il programma, riesce a sfruttare
+         meglio il meccanismo di lazy eval.
+01/7/27  Nessuna estensione del tempo di ricerca finche' non si ha un valore
+         stimato per la posizione in analisi.
+01/7/27  Nuova informazione registrata nel file di log (tempo totale
+         effettivamente impiegato per la ricerca).
+01/7/26  Riscritta la funzione giocatore::analizza in modo da semplificare il
+         codice sorgente e la gestione delle estensioni temporali.
+01/7/25  Piccole modifiche al codice ed ulteriori tarature del meccanismo di
+         esclusione delle null moves introdotto lo 01/7/10.
+01/7/10  Ulteriore vincolo da verificare per poter effetturare una null move:
+         una valutazione statica approssimativa della posizione non deve essere
+         troppo inferiore al valore alfa. Attualmente, come valutazione
+         statica, si utilizza la differenza di materiale. Si e' riscontrata una
+         diminuzione del numero di nodi ricercati in grado di compensare la 
+         sola diminuzione di velocita' per l'effettuazione dell'ulteriore 
+         controllo. In alcune rare posizioni di matto la ricerca e' 
+         sensibilmente piu' veloce.
+01/6/30  Eliminati i bonus statici per la posizione dell'Alfiere: dopo 
+         moltissimi test non si e' rilevata una diminuzione della forza di
+         gioco ne' alcun cambiamento significativo nello stile del programma.
+         La valutazione dell'Alfiere deve essere basata su criteri piu'
+         approfonditi di una semplice tabella statica.
+01/6/25  Introdotto l'array flip utilizzato per evitare di dover considerare
+         i due differenti punti di vista del Bianco e del Nero.
+01/6/21  Risolte alcune piccole(?), residue incompatibilita' con Winboard.
+01/6/21  Risolto il problema del rientro nel libro di apertura (vedi commento
+         n. 128 del quaderno di sviluppo).
+-------------------------------------------------------------------------------
+01/6/20   Nuova REVISIONE 0.7.7.
+-------------------------------------------------------------------------------
+01/6/20  Numerosi esperimenti con gli switch del compilatore. Si e' scoperto
+         che:
+         - lo switch -freg-struct-return non permette di compilare
+           correttamente il programma.
+         - lo switch -O3 produce un eseguibile enorme di poco piu' veloce di
+           quello ottenuto con lo switch -O2. Ulteriori prove hanno evidenziato
+           che la ragione di questo comportamento e' dovuta allo switch
+           -frename-registers che porta una diminuzione delle prestazioni
+            compensata pero' da -finline-functions. Utilizzando la coppia
+           -O2 -finline-functions si salvano capra e cavoli (ma l'eseguibile
+           rimane comunque enorme).
+         L'uso delle nuove funzioni assembler e dei nuovi switch ha portato ad
+         un programma piu' veloce del 5% rispetto a quello compilato con la
+         precedente versione del GCC.
+01/6/20  Riscritte le funzioni in assembler grazie alla scoperta dell'esistenza
+         del vincolo "A" per i parametri che permette una semplice gestione dei
+         tipi a 64 bit.
+01/6/19  Installato il compilatore GCC 3.0 (nuovo sistema di sviluppo di
+         riferimento) e apportate piccole modifiche al codice sorgente per
+         rimuovere alcuni warning. Il risultato e' stato spaventoso: il codice
+         prodotto sembra piu' lento del 20% (almeno).
+01/6/18  Nella posizione 259 del test ECM anche la mosse Bb7 e' soluzione in
+         quanto porta al matto in 10 mosse (verificato con Joker e Crafty). Il
+         test originale e' stato modificato a seguito di questa osservazione.
+01/6/18  Piccole modifiche per semplificare il codice sorgente del modulo
+         situazione_valutata.
+01/6/18  Modificato codice per la valutazione della Donna:
+         - aggiunto termine king_tropism per attirare la Donna al Re nemico;
+         - eliminato bonus per Donna in 7a insieme alla Torre.
+01/6/16  Aggiunto il codice necessario per l'identificazione e la valutazione
+         di Pedoni doppiati. Si sono riscontrati interessanti miglioramenti
+         nella testsuite ECM a seguito di questa modifica.
+01/6/15  Adottata la funzione hash di Jenkins per il funzionamento del modulo
+         e_cache. Come suggerito da Dann Corbit, quando si calcola una chiave 
+         hash in modo non incrementale, questa tecnica risulta essere piu' 
+         veloce di quella di Zobrist. Facendo esperimenti con questo modulo si
+         e' anche scoperto che 32 bit non sono sufficienti per rappresentare la
+         disposizione dei Pedoni e dei Re senza che si verifichino troppo
+         frequenti collisioni. Si e' quindi adottata una chiave di 64 bit come
+         per la tabella delle trasposizioni.
+01/6/13  Rimosse le limitazioni riguardanti il dettaglio di analisi necessario
+         per effettuare l'estensione per minaccia (il programma sembra essere
+         tatticamente piu' forte).
+01/6/10  Rimosso piccolo bug nel nuovo modulo ripetizioni: non veniva inclusa
+         la posizione iniziale nell'insieme di quelle controllate.
+-------------------------------------------------------------------------------
+01/5/1   Nuova REVISIONE 0.7.6.
+-------------------------------------------------------------------------------
+01/6/6   Riscritto ex-novo il modulo ripetizioni. Si era individuato un bug
+         frequente nelle partite contro Fortress: quando Joker pensava che la
+         partita fosse patta per ripetizione di posizioni, giocava un mossa
+         qualsiasi! Il nuovo modulo gestisce una unica lista per entrambe i
+         giocatori e la scandisce completamente, dalla fine verso l'inizio, 
+         senza tener conto della regola delle 50 mosse. La cosa strana e' che
+         un approccio cosi' brutale e' risultato piu' efficiente di quello
+         precedentemente adottato.
+01/6/6   Uscita immeditata dalla fase di analisi in caso di unica mossa forzata
+         (ogni tanto permette di risparmiare un po' di tempo).
+01/6/5   Per Torre su colonna semiaperta:
+         - si e' diminuito il bonus assegnato;
+         - si e' introdotto il termine "tropism" come nel caso di colonna
+           aperta.
+01/6/5   Bonus per Pedone passato supportato da Torre.
+01/6/5   Corretto bug relativo alla valutazione automatica della variante di
+         apertura: l'apposita funzione non era sempre richiamata a fine 
+         partita.
+01/6/4   Supportato il nuovo comando "playother" con conseguente abbandono
+         del supporto per i vecchi comandi "white" e "black".
+01/6/4   Nuovo test di riferimento. Da questo momento si abbandona
+         completamente il WAC.EPD a favore dell'ECM.EPD. L'esecuzione del test,
+         con tempo massimo di 60 secondi a posizione, e' molto lunga ma anche
+         piu' accurata. Come affermato da Bruce Moreland non e' possibile
+         continuare ad usare il WAC.EPD una volta che il programma abbia 
+         raggiunto una discreta forza di gioco. Il test "in seconda" continua
+         ad essere l'LCT2.EPD (180 secondi a posizione).
+01/6/4   Il bonus per l'occupazione della 7a traversa assoluta viene ora
+         assegnato solo in presenza di propri Pedoni passati.
+01/6/4   Eliminato bug nell'assegnamento del punteggio a Pedoni passati 
+         doppiati (veniva assegnato meta' punteggio ad entrambi i Pedoni 
+         anziche' punteggio intero per l'avenzato e meta' punteggio per
+         l'arretrato).
+01/6/3   Incrementato leggermente il valore di Alfiere e Cavallo in modo che
+         il programma non scambi facilmente tre Pedoni per un pezzo minore od
+         una Torre ed un Pedone per due pezzi minori.
+01/6/3   Aggiunto un termine di valutazione per l'occupazione della 7a (2a)
+         traversa assoluta da parte di Torri.
+01/6/2   Unificate le funzioni di valutazione della disposizione dei pezzi
+         (in precedenza si utilizzava una funzione diversa per ogni fase di
+         gioco).
+01/6/1   Modifiche alla classe supporto_ricerca in modo da farle gestire anche
+         la struttura dati_r.
+01/6/1   Individuato bug nell'estensione del tempo di ricerca in caso di fail
+         low.
+01/5/31  Riscritte in assembler inline (gas) la funzione bitboard::count.
+-------------------------------------------------------------------------------
+01/5/1   Nuova REVISIONE 0.7.5.
+-------------------------------------------------------------------------------
+01/5/29  Modificato il criterio di aggiornamento delle posizioni nella tabella
+         delle trasposizioni:
+         - una posizione con una valutazione di matto e' preferibile ad una
+           con diversa valutazione indifferentemente dalla profondita' di
+           analisi;
+         - sono state eliminate le modifiche descritte in 01/3/9.
+01/5/28  Bonus per occupazione di avamposti e case forti anche nel finale.
+01/5/23  Modificati i criteri di apprendimento per la libreria di aperture
+         (vedere sorgente per i dettagli).
+01/5/22  Ulteriori modifiche all'interfaccia nel tentativo di raggiungere la
+         piena compatibilita' con Winboard.
+01/5/21  Introdotto bonus per la Donna quando il Re avversario e' esposto.
+01/5/20  Piccoli miglioramenti di efficienza per le funzioni di valutazione
+         statica.
+01/5/19  Semplificato il sorgente del modulo di gestione della libreria di
+         aperture.
+01/5/18  Modificata la funzione di ricerca di quiescenza. La funzione e' ora
+         meno selettiva ma codificata in modo piu' efficiente.
+01/5/18  La struttura attributi memorizza ora tutta una serie di nuove, 
+         ulteriori, informazioni (re sotto scacco, non effettuazione null
+         move...). Grazie a questa modifica si sono potute semplificare le 
+         classi trasposizioni, supporto_ricerca ed alcune funzioni della
+         classe giocatore.
+01/5/18  Ancora problemi con Winboard (funziona con Borland C++ ma non con 
+         Cygwin).
+01/5/17  Aggiunto bonus per Donna in 7a (ovvero 2a) con supporto di Torre e
+         Re avversario bloccato su traversa base (solo durante mediogioco).
+01/5/17  Joker e' ora pienamente compatibile con Winboard.
+01/5/16  Il programma Jbook e' ora in grado di creare libri di apertura con
+         semplici statistiche accluse.
+01/5/16  Semplificato il modulo Interfaccia.
+-------------------------------------------------------------------------------
+01/5/1   Nuova REVISIONE 0.7.4.
+-------------------------------------------------------------------------------
+01/5/15  Riscritta la classe partita con conseguente semplificazione del file
+         main.cc.
+01/5/15  Piccolo miglioramento nella realizzazione di n_ufficiali.
+01/5/14  La valutazione piu' accurata dei Pedoni passati ha reso inutile 
+         l'estensione del livello di ricerca per ogni spinta di Pedone passato.
+01/5/14  Introdotto bonus per coppia di Pedoni passati e connessi.
+01/5/13  Modificata la tecnica di identificazione delle Torri limitate (uso di
+         bitboard).
+01/5/12  Migliorata la valutazione dei Pedoni passati:
+         - nel caso di due Pedoni passati doppiati, solo il primo riceve il
+           bonus completo;
+         - durante il finale viene assegnato un bonus supplementare per Pedoni
+           passati supportati dal proprio Re. 
+01/5/11  I Singleton logger e libro_apertura sono ora realizzati mediante
+         variabili statiche (in modo da non necessitare dell'if nel metodo
+         instance). Il Singleton interfaccia deve ancora ricorrere 
+         all'allocazione dinamica.
+01/5/11  La classe log_file ha cambiato nome diventando il Singleton logger.
+01/5/11  Aggiunto bonus per possesso coppia di Alfieri.
+01/5/10  Modificata la condizione per l'assegnazione del bonus per Torre sulla
+         7a (2a per il Nero) traversa: il Re avversario deve essere
+         intrappolato sulla traversa base.
+01/5/10  La classe e_cache viene ora utilizzata anche per la memorizzazione
+         delle case deboli (con conseguente incremento di velocita' del 4%).
+01/5/9   Aggiunta penalizzazione per Torri con limitata mobilita' orizzontale.
+-------------------------------------------------------------------------------
+01/5/1   Nuova REVISIONE 0.7.3.
+-------------------------------------------------------------------------------
+01/5/6   Il punteggio di penalita'/bonus usato per l'aggiornamento della
+         libreria di apertura e' ora variabile in base alla distanza dalla
+         posizione di inizio gioco (variazioni minori per posizioni prossime
+         a quella iniziale).
+01/5/5   Introdotto un nuovo criterio di aggiornamento automatico in fase di
+         apertura: se Joker viene battuto si penalizzano le posizioni da lui
+         scelte mentre si assegna un bonus a quelle raggiunte dall'avversario.
+01/5/4   Semplificato il codice del programma Jbook.
+01/5/3   Introdotta una forma sperimentale di identificazione automatica delle
+         varianti buone/cattive in fase di apertura. Il criterio di
+         aggiornamento e' il seguente: se il giocatore piu' forte (in base al
+         punteggio Elo) perde o patta, allora le posizioni da lui raggiunte
+         vengono penalizzate mentre viene assegnato un bonus alle posizioni
+         raggiunte dall'avversario.
+01/5/2   La classe libro_apertura e' ora diventata un Singleton. L'uso di 
+         questo design pattern semplifichera' la realizzazione di una algoritmo
+         di ricerca parallelo.
+01/5/1   Introdotta classe e_cache. Questa classe, mantenendo un insieme di
+         informazioni accessibili in maniera associativa, permette la 
+         valutazione dettagliata di aspetti della posizione riguardanti i soli
+         Pedoni e Re senza compromettere la velocita'.
+01/5/1   Modificato il criterio di identificazione di una casa forte: se un
+         Pedone, partendo dalla sua casa base e muovendo di due passi, e' in
+         grado di attaccare una casella, allora quella casella non e' forte.
+-------------------------------------------------------------------------------
+01/5/1   Nuova REVISIONE 0.7.2.
+-------------------------------------------------------------------------------
+01/4/30  Modificata la funzione di valutazione statica:
+         - i Pedoni su colonne piu' prossime al centro sono intrinsecamente
+           migliori rispetto a quelli su colonne laterali (per cui, per 
+           esempio, conviene catturare verso il centro);
+         - il bonus per Pedoni passati viene usato come moltiplicatore per il
+           valore base del Pedone.
+01/4/30  Eliminato bug relativo alla valutazione del Re nel finale: non veniva
+         correttamente calcolata la penalita' per Re vicino agli angoli della
+         scacchiera.
+01/4/30  Modificato il modulo situazione_valutata: c'e' ora un unico array dei
+         bonus posizionali, opportunamente precalcolato dopo il cambio della
+         fase di gioco. In seguito a questa modifica e' stato possibile 
+         semplificare il codice sorgente del modulo.
+01/4/29  Modifice all'algoritmo di estensione automatica del tempo di analisi:
+         - in caso di fail high, in posizione non ancora vinta, su mossa 
+           diversa da quella della variante principale, si estende il tempo di
+           ricerca;
+         - non si puo' aumentare il tempo di ricerca piu' di 6 volte il tempo
+           base;
+         - possibilita' di disattivare l'algoritmo di estensione dell'analisi;
+         - incremento del tempo proporzionale al materiale perso (mezzo Pedone
+           = raddoppio tempo).
+01/4/28  Estensione automatica del tempo di riflessione per posizioni 
+         complesse. Il codice non e' ancora testato a fondo.
+01/4/27  Rimosso bug: la tabella delle trasposizioni veniva resettata
+         all'inizio di ogni ricerca.
+01/4/27  Migliorata la leggibilita' del file di log.
+01/4/26  Rimossa la penalizzazione per Alfiere su bordo durante il finale.
+01/4/25  Codificata la funzione bitboard::firstone in assembler. Sotto linux
+         con g++ si e' registrato un aumento di velocita' del 10%
+01/4/24  Supporto per l'euristica killer. Si e' riscontrato un incremento di
+         velocita', dipendente dalla posizione, variabile fra il 10 ed il 20%
+         Si e' anche verificata una leggera diminuzione del numero dei nodi
+         analizzati.
+01/4/18  Piccole modifiche all'Adaptive Null Move Pruning.
+01/4/17  Migliorata la compatibilita' con Winboard.
+01/4/13  Aggiunto bonus posizionale per i Pedoni che, in fase di apertura,
+         controllano il centro.
+01/4/12  Aggiunta penalizzazione per Alfieri e Cavalli su bordo scacchiera 
+         anche durante il finale.
+01/4/11  Nuovo compilatore per lo sviluppo sotto Linux: gcc 2.95.3.
+01/4/10  Eliminato problema di caricamento di database EPD terminanti con spazi
+         bianchi dopo l'ultima posizione memorizzata.
+-------------------------------------------------------------------------------
+01/3/31  Nuova REVISIONE 0.7.1.
+-------------------------------------------------------------------------------
+01/3/31  Ripulito il codice dei sottoprogrammi jbook e jstat.
+01/3/31  Semplificata la classe dati_r.
+01/3/30  Migliorata la funzione di valutazione statica: vengono ora analizzate
+         anche le case forti (prima solo avamposti).
+01/3/29  Piccole modifiche per aumentare l'efficienza della funzione di
+         ricerca.
+01/3/28  Introduzione di piccole limitazioni al meccanismo di estensione della
+         ricerca
+01/3/27  Migliorato supporto xboard: viene ora riconosciuto il comando 
+         setboard.
+01/3/26  Corretto bug legato al libro di apertura: se si giocavano piu' partite
+         successive, solo nella prima veniva utilizzato il libro di apertura.
+01/3/25  Modificata la routine di incremento dell'euristica storica in modo da
+         ignorare le mosse di cattura.
+01/3/24  Corretto bug di overflow legato a ricerche prossime alla massima 
+         profondita'.
+01/3/19  Modificato il meccanismo di validation search, sono comunque ancora in
+         corso verifiche sulla validita' dell'algoritmo.
+01/3/10  Modificate le condizioni di estensione della ricerca: l'idea base e'
+         di evitare estensioni in nodi troppo vicini alla radice dell'albero
+         di ricerca. Si sono ottenuti interessanti risultati nei test tattici.
+01/3/9   Modificato l'algoritmo di inserimento e modifica posizioni nella 
+         tabella hash:
+         - non e' piu' possibile che i due livelli di uno stesso elemento della
+           tabella contengano informazioni relative alla stessa posizione
+           (questa modifica porta ad una netta diminuzione delle anomalie di
+           ricerca);
+         - vantaggi analoghi a quelli descritti in data 99/10/12 si possono
+           ottenere modificando la regola di sovrascrittura della posizione
+           di livello 0; se una nuova posizione ha lo stesso dettaglio di
+           analisi della posizione di livello 0 gia' presente nella tabella,
+           si effettua un rimpiazzamento solo se il tipo ed il valore della
+           nuova posizione sono tali da garantire una maggiore probabilita' di
+           taglio (vedere codice sorgente). Questa variazione e' ispirata da
+           EXChess 4.01.
+-------------------------------------------------------------------------------
+01/3/9   Nuova VERSIONE 0.7.0: dopo un interminabile periodo di oblio si e'
+         riavviato il processo di sviluppo. Molte cose sono cambiate, non c'e'
+         piu' tutto il tempo libero di prima e l'interesse legato al programma
+         e' ormai di tipo principalmente informatico. Gli obiettivi descritti
+         nella revisione 0.6.7 rimangono invariati ma, prima di perseguirli,
+         si e' deciso per una radicale riprogettazione dei sorgenti; il gioco
+         di questa versione e' identico a quello della 0.6.7 ma i sorgenti 
+         sono rivoluzionati. La velocita' di calcolo e' rimasta piu' o meno
+         invariata.
+-------------------------------------------------------------------------------
+01/3/8   Ulteriormente semplificati i moduli test, supporto_ricerca e 
+         giocatore.
+01/3/8   Modificata la classe supporto ricerca in modo da interagire meglio con
+         il modulo statistico.
+01/3/7   Estensione delle funzioni della classe supporto ricerca e conseguente
+         semplificazione della classe giocatore.
+01/3/7   La relazione fra la classe situazione e quella info_aus si e'
+         trasformata da HAS-A in IS-A.
+01/3/6   Eliminata ogni limitazione riguardante la lunghezza dei tag per file
+         epd.
+01/3/6   Sostituzione di alcuni metodi della classe attributi con un unico
+         metodo basato su template.
+01/3/5   Il modulo info_ricerca si e' trasformato nel modulo statistico; la
+         relazione della classe giocatore con quella statistico e' ora di tipo
+         IS-A (prima HAS-A).
+01/3/5   Semplificato il modulo tipo_mossa mediante l'uso di function
+         templates.
+01/3/4   Riscritta la classe interfaccia in modo da utilizzare il design 
+         pattern SINGLETON (con conseguente semplificazione della funzione di
+         inizializzazione globale).
+01/3/4   Riscritte molte funzioni template in modo da avvalersi del miglior
+         supporto delle stesse da parte dei nuovi compilatori (gcc 2.95.2,
+         Borland C++ Builder 5. Naturalmente il Visual C++ prosegue per una
+         strada tutta sua....).
+01/3/3   Avviato un processo di semplificazione del codice:
+         - opportunamente inglobati od eliminati i file sorgente di poche
+           righe (il progetto e', comunque, ancora costituito da troppe
+           classi/moduli);
+         - profondamente modificata l'implementazione della classe 
+           situazione_valutata in modo da diminuirne le dimensioni ed
+           aumentarne la semplicita'.
+01/3/3   Modificato il modulo xboard in modo da supportare il nuovo protocollo
+         protover 2.
+01/3/2   Riscritti tutti i Makefile ed il file di configurazione in modo da
+         adottare un'architettura piu' flessibile: le definizioni sono tutte
+         nei Makefile ed il Makefile principale e' in grado di richiamare
+         quelli dei sottoprogetti.
+01/3/2   Semplificato il codice relativo alla tecnica delle null_move.
+01/3/2   Semplificato il codice della funzione estrai_mossa.
+01/3/1   Eliminato ogni compromesso dovuto alla decisione iniziale di
+         utilizzare la tecnica 0x88. Le posizioni sono ora codificate mediante
+         interi compresi nell'intervallo [0,65]; in questo modo si e' 
+         notevolmente semplificata la comprensione del codice e si e'
+         sensibilmente ridotto lo spazio occupato da array precalcolati.
+01/3/1   Da questa data lo sviluppo del programma riprende su un computer con
+         microprocessore AMD Thunderbird a 850Mhz e 256Mb di memoria.
+-------------------------------------------------------------------------------
+99/9/29  Nuova REVISIONE 0.6.7: la strada percorsa e' ormai lunga, quella da
+         percorrere rimane infinita... Alcune delle esigenze piu' sentite sono
+         le seguenti:
+         - migliorare l'interfaccia con X(Win)Board (pondering, set up della
+           posizione, gestione patte);
+         - aggiungere/sperimentare alcuni algoritmi di ricerca (nell'ordine
+           ETC e MTD);
+         - automatizzare, mediante l'uso di programmi tipo CVS o RCS, la
+           gestione delle revisioni;
+         - cominciare a mettere a punto il gioco posizionale oltre a quello
+           tattico.
+-------------------------------------------------------------------------------
+99/12/5  Aggiunta la capacita' di analizzare, nel solo nodo radice, le 
+         promozioni a pezzi minori.
+99/12/5  Aggiunta la capacita' di individuare correttamente le patte per 
+         ripetizione di posizione anche nel nodo radice.
+99/11/30 Eliminato bug nella funzione di conversione delle mosse dal formato
+         SAN a quello interno: le promozioni a pezzi minori non venivano
+         gestite correttamente in quanto la funzione di generazione delle mosse
+         legali ignorava le sottopromozioni e ci si era scordati che, perche'
+         due mosse di promozione siano uguali, oltre che per la posizione 
+         iniziale e finale, devono coincidere anche i tipi di promozione.
+99/11/28 Rimosso parte del codice per la gestione di casi particolari durante
+         l'aggiornamento della chiave_hash. Non si marcano piu' le posizioni
+         in cui si effettua una cattura en passant od un arrocco in quanto si
+         puo' giungere alla stessa posizione anche con una sequenza di mosse
+         "normali" e non per questo la posizione finale va considerata diversa
+         nei due casi. Si sono condotti numerosi test per verificare la
+         validita' di questa modifica arrivando a stabilire che si ottine un
+         piccolo miglioramento nell'hit rate della tabella hash. Va comunque
+         notato che e' possibile che due posizioni con identica disposizione di
+         pezzi differiscano per il fatto di poter o meno effetturare una 
+         cattura en passant od un arrocco: questo problema non e', per ora, 
+         affrontato.
+99/11/21 Aggiunto al programma jbook il supporto per i file PGN contenenti
+         commenti testuali (non ancora supportati i NAG).
+99/11/14 Riscritto l'intero programma jbook. Le novita' piu' importanti sono:
+         - velocita' di creazione e modifica dei libri di apertura enormemente
+           migliorata;
+         - lieve miglioramento nell'efficienza di memorizzazione del libro di
+           apertura;
+         - alle posizioni viene ora associta una valutazione al posto di un
+           resoconto statistico; l'uso della valutazione permette, oltre alla
+           possibilita' di realizzare piu' potenti algoritmi di apprendimento,
+           l'utilizzazione del libro di apertura durante la ricerca;
+         - jbook funziona ora anche sotto UNIX.
+99/11/7  Introdotta la tecnica dell'adaptive null move in una versione piu'
+         conservativa rispetto a quanto suggerito da Heinz; i primi risultati
+         sono incoraggianti (diminuzione dei nodi analizzati dell'ordine del 
+         10% per ricerche di 60s, nessuna apparente perdita di capacita'
+         tattiche).
+99/11/3  Introdotto il nuovo modulo san al fine di alleggerire il gia' 
+         sovraccarico modulo situazione.
+99/10/30 Reintrodotte le versioni non basate su template dei moduli 
+         situazione_valutata e tabella_pedoni; l'uso dei vecchi moduli e'
+         limitato al Visual C++, non ancora conforme allo standard ISO e non in
+         grado di gestire i member template.
+99/10/25 Aggiunte e modifiche a vari moduli tese ad aumentare la fiducia nel
+         corretto funzionamento del codice.
+99/10/18 Modificata la tecnica di memorizzazione dei punteggi di matto nella
+         tabella hash secondo quanto suggerito dal Bruce Moreland (non si 
+         modificano piu' le valutazioni esatte per tener conto del ply in cui
+         si individua il matto, si provvede invece a convertire le valutazioni
+         in opportune limitazioni superiori ed inferiori). Il nuovo sistema,
+         pur non fornendo nessun miglioramento di prestazioni, porta ad una
+         maggior semplicita' del codice sorgente.
+99/10/14 Modificato il codice delle funzioni di valutazione della posizione: al
+         posto di utilizzare un ciclo ed una inversione di segno per tener 
+         conto del punto di vista dei due giocatori, si utilizzano ora 
+         funzioni template istanziate coi due diversi colori; il risultato
+         e' un eseguibile di maggiori dimensioni ma piu' veloce su elaboratori
+         di fascia alta. Sul K6-3 450 si e' riscontrata una sostanziale
+         equivalenza per ricerche brevi ed un incremento di prestazioni del
+         4-5% per ricerche sopra i 60 secondi.
+99/10/13 Cambiata l'implementazione del tipo colore che, da classe, passa a
+         semplice typedef; di fatto la precedente realizzazione era 
+         sproporzionata rispetto alle esigenze.
+99/10/12 Nuova serie di profonde modifiche al modulo tabella_hash. Fra le piu'
+         importanti:
+         - vengono ora utilizzate locazioni della tabella contenenti una coppia
+           di elementi descriventi la stessa posizione. Puo' accadere che, a 
+           causa dell'approfondimento iterativo e delle estensioni di gioco, si
+           giunga alla stessa posizione con valutazioni e mosse migliori
+           differenti; in questo caso, purche' il dettaglio di analisi risponda
+           alle esigenze, non si usa automaticamente l'elemento 0, bensi' 
+           quello che massimizza la valutazione. Questo nuovo modo di
+           procedere, in apparenza valido solo in un numero ristretto di casi,
+           si e' rivelato, all'atto pratico, molto utile, favorendo la scoperta
+           di linee forzate e permettendo di utilizzare la tecnica descritta il
+           99/9/14 senza incorrere nel problema evidenziato il 99/9/15;
+         - quando si inserisce un nuovo elemento nel livello 0 non si sposta
+           piu' il vecchio a livello 1 se questo descrive la stessa posizione
+           di quello.
+         Sono stati effettuati numerosi esperimenti e pare che le novita'
+         introdotte risultino sempre piu' efficienti del vecchio modo di
+         procedere; comunque si e' evidenziato come una stessa piccola modifica
+         alla tabella hash possa avere un enorme impatto, nel bene e nel male,
+         a seconda della posizione.
+99/10/11 Riscritta buona parte del modulo tabella_hash e parti di altri moduli
+         che ne usufruivano (principalmente giocatore); si sono ottenuti alcuni
+         risultati interessanti:
+         - si e' scoperto un bug nella funzione find: quando gli elementi di
+           livello 0 ed 1 della tabella contenevano la stessa posizione, in 
+           ambo i casi analizzata con dettaglio sufficiente, venivano 
+           utilizzati, eccezion fatta per la miglior mossa, i dati di livello 1
+           anziche' quelli di livello 0. Cosi' facendo si producevano molte
+           instabilita' nella ricerca e un sensibile indebolimento della forza
+           di gioco;
+         - si e' semplificato lo scambio di dati fra le funzioni find e le
+           funzioni di ricerca del modulo giocatore;
+         - si e' notevolmente alleggerito il codice della funzione find.
+         Il merito di queste scoperte va all'esempio fornito nel sorgente del
+         Gnu Chess 5.
+99/10/4  Modificato il modulo test in modo da escludere dal calcolo dell'indice
+         nps medio le posizioni in cui si e' analizzato un esiguo numero di
+         nodi (tali posizioni risultano spesso fuorvianti in quanto i "costi
+         fissi" delle funzioni di ricerca, nella realta' sempre trascurabili,
+         risultano avere un peso uguale o superiore a quelli variabili).
+99/10/2  Modifiche al modulo tabella_hash finalizzate ad aumentare l'efficienza
+         di memorizzazione/recupero degli attributi di una posizione.
+-------------------------------------------------------------------------------
+99/9/29  Nuova REVISIONE 0.6.6: si sono introdotte alcune novita' e molte nuove
+         idee aspettano di essere verificate (fra le piu' importanti l'ETC).
+         Il programma comincia a giocare in modo accettabile (si osservano le 
+         prime vittorie contro programmi forti: Comet, LG2000). A questo punto
+         l'intenzione e' di dedicare i prossimi sforzi all'individuazione di 
+         bug, al miglioramento delle prestazioni ed alla semplificazione del
+         codice sorgente prima di riprendere nello sviluppo vero e proprio del
+         programma.
+-------------------------------------------------------------------------------
+99/9/29  Numerose modifiche al codice dei moduli dati_r, info_aus, situazione,
+         tabella_pedoni, unsigned64 tese a semplificare il codice sorgente ed
+         a migliorarne l'efficienza. Eliminato il modulo bit_set che, nel 
+         tempo, si era ridotto ad un doppione di unsigned64. Si e' ottenuto un
+         sensibile incremento di prestazioni sostituento l'algoritmo della
+         funzione ripristina, inizialmente basato sull'analisi della mossa
+         effettuata e il conseguente ripristino condizionale, con un semplice
+         meccanismo di copia di backup (la classe tabella_pedoni e',
+         relativamente, piccola: 24 byte).
+99/9/28  Disponibile una versione preliminare della libreria di accesso alle
+         tabelle precalcolate dei finali; quando sara' sufficientemente
+         sperimentata verra' integrata nel programma principale.
+99/9/26  Modificata la funzione di gestione delle estensioni: tutte le
+         estensioni vengono, ora, scelte in base alla posizione ottenuta dopo
+         l'effettuazione della mossa attuale (in precedenza questo avveniva
+         solo per gli scacchi e le estensioni dipendenti dal tipo di mossa e
+         non funzione degli attributi della posizione).
+99/9/25  Riscritte le funzioni in assembler, sino ad ora disponibili per il 
+         solo Visual C++, nella sintassi del GCC. Non si sono riscontrati 
+         incrementi di velocita'.
+99/9/25  Bloccata l'effettuazione di null move per posizioni memorizzate nella
+         tabella hash aventi valutazione esatta inferiore a beta (in precedenza
+         si utilizzavano solo posizioni di tipo fail low); in questo modo si 
+         sono sensibilmente ridotte le anomalie di ricerca.
+99/9/22  Piccole modifiche riguardanti l'identificazione di Torri bloccate (una
+         Torre su colonna aperta o semi-aperta, in genere, non e' bloccata) e
+         la valutazione della Torre su colonna semi-aperta (ora si assegna un
+         bonus anche durante la fase di apertura).
+99/9/21  Piccole modifiche pratiche per aumentare la velocita' del programma
+         (risultato ottenuto dell'ordine del 1%).
+99/9/20  Modificato il criterio di identificazione degli avamposti: non e' piu'
+         sufficiente la presenza di una casa debole nel territorio avversario,
+         e' anche necessaria la presenza di un Pedone fissatore; contrariamente
+         a quanto affermato nella nota 99/2/18, prove pratiche hanno
+         evidenziato che l'assenza del Pedone fissatore rendeva la valutazione
+         poco significativa.
+99/9/19  Modificati i criteri di attivazione delle null move: non e' piu'
+         necessario che il giocatore che effettua la null move abbia almeno tre
+         pezzi sulla scacchiera, e' invece richiesto che entrambi i giocatori
+         abbiano almeno un pezzo oltre al Re (criterio adottato da 
+         Darkthought); al fine di ridurre le anomalie di ricerca e' stato
+         unificato il livello di riduzione della profondita' in seguito alla
+         null move (in precedenza variabile in base al dettaglio di analisi
+         della posizione).
+99/9/19  Aggiunto il peso torre_bloccata necessario per evitare che il
+         programma, al fine di riparare il Re dietro ad uno scudo di Pedoni,
+         blocchi la Torre in un angolo della scacchiera.
+99/9/17  Riscritto il modulo test in modo da semplificare il sorgente e ridurre
+         l'occupazione di memoria per la memorizzazione dei risultati parziali;
+         nel contempo aggiunto il supporto per il conteggio delle anomalie di
+         ricerca.
+99/9/17  Modificate le modalita' di visualizzazione della variante principale:
+         per evitare di visualizzare ridicole varianti di poche mosse, piu'
+         volte aggiornate, per la prima visualizzazione si attende che la
+         ricerca abbia consumato almeno un secondo o il 10% del tempo totale
+         disponibile; prima del verificarsi di queste condizioni non vengono
+         visualizzate neanche le informazioni relative al fail high ed al fail
+         low.
+99/9/17  Creata una funzione apposita per il recupero della mossa migliore 
+         dalla tabella hash; il codice risulta ora sensibilmente piu' chiaro.
+99/9/15  Rimossa la tecnica di recupero mosse in posizioni di tipo fail low:
+         produceva un notevole rallentamento in finali di soli Pedoni.
+99/9/14  Modificata la tecnica di memorizzazione delle posizioni di tipo
+         fail low nella tabella hash: in tali posizioni non si ha una mossa
+         valida da tentare per prima, e' quindi ragionevole, nel caso la
+         posizione da memorizzare sovrascriva una posizione con chiave identica
+         ma precedentemente valutata di tipo non fail low, recuperare la
+         mossa precedentemente considerata migliore e memorizzarla con la
+         nuova posizione. Questa modifica ha prodotto un miglioramente nel test
+         WAC ma nessuna variazione di rilievo nel BT2630 e nel TYPP.
+99/9/14  Corretto bug relativo alla gestione dei punteggi di matto e delle hash
+         table (scorretta gestione delle posizioni con valutazione non esatta;
+         a tale proposito consultare le note relative a Crafty 16.18).
+99/9/13  Unificate le due funzioni insert_best ed insert_ref nell'unica insert;
+         la modifica semplifica il codice relativo alle tabelle hash.
+99/9/7   Semplificata la funzione di analisi della posizione riunendo le
+         distinte analizza ed analizza_profondita'; la modifica' servira' ad
+         evitare che ci si limiti ad apportare aggiornamenti ad una sola delle
+         due funzioni, dimenticandosi dell'altra.
+99/9/6   Riorganizzata la gestione dell'interfaccia e del log_file con 
+         conseguente netta semplificazione del codice sorgente.
+99/9/5   Creato il nuovo modulo pesi e con esso aggiunta la possibilita' di
+         cambiare semplicemente i pesi delle funzioni di valutazione senza 
+         dover ricompilare il programma.
+99/9/4   Migliorata la tecnica di ordinamento delle mosse nella radice 
+         dell'albero di ricerca (vengono, ora, considerate anche le mosse che
+         provocano un fail high).
+99/9/4   Aumentata capacita' di riconoscimento della patta per ripetizione di
+         posizione (si considerano, ora, anche le posizioni da cui ha inizio la
+         ricerca di quiescenza).
+-------------------------------------------------------------------------------
+99/9/4   Nuova REVISIONE 0.6.5: la correzione di alcuni bug ha portato ad una
+         versione del programma sensibilmente piu' forte tatticamente. Manca,
+         ancora, una valida funzione di valutazione della posizione.
+-------------------------------------------------------------------------------
+99/9/4   Riorganizzati i sorgenti dei moduli supporto_ricerca e 
+         lista_ripetizioni.
+99/9/3   Ottimizzata la funzione di identificazione delle posizioni patte
+         (sfruttando il fatto che e' inutile cercare ripetizioni di posizione
+         precedenti mosse irreversibili).
+99/8/31  Numerose modifiche al codice di gestione delle eccezioni. Reintrodotto
+         sistema di estensione profonda per spinte di Pedone passato.
+99/8/30  Corretto bug nella classe test che impediva il riconoscimento di
+         di risposte corrette diverse dalla prima indicata.
+99/8/30  Corretto bug relativo all'adattamento della finestra di ricerca dopo
+         un fail low.
+99/8/30  Corretto bug relativo all'algoritmo null move: e' il giocatore che
+         effettua la null move (passa la mano) a non dover essere in zugzwang,
+         non il suo avversario. 
+99/8/30  Corretto bug relativo alla definizione condizionale LAZY_EVAL.
+99/8/30  Corretto bug nella funzione di identificazione della patta per 
+         ripetizione di posizione: si poteva accedere in lettura a locazioni
+         di memoria indefinite.
+99/8/29  Modificato il codice di ricerca in modo che, al verificarsi di un
+         fail high durante l'aspiration search, venga immediatamente adottata
+         la mossa che provoca il fallimento.
+99/8/29  Aggiunto il supporto per il riconoscimento e l'effettuazione di mosse
+         di promozione a pezzi diversi dalla Donna. Joker non e', comunque,
+         ancora in grado di considerare promozioni a pezzi inferiori durante
+         l'analisi.
+99/8/27  Modificata la ricerca alpha-beta in modo da utilizzare la variante
+         fail-soft.
+99/8/26  Modificate le funzioni di ricerca in modo da utilizzare l'aspiration
+         search (non si sono registrati miglioramenti).
+99/8/26  Eliminato bug che portava ad un loop infinito nella funzione
+         'analizza' quando richiamata in posizioni di patta per stallo.
+99/8/25  Modifiche alla routine di interruzione della ricerca al fine di 
+         evitare che, quando si esaurisce il tempo di ricerca, possano venire
+         memorizzati nella tabella hash valori inesatti.
+99/8/25  Cambiato l'algoritmo di identificazione della variante principale: non
+         viene piu' utilizzata una classe ad hoc basata su di un array 
+         "triangolare"; si preferisce, ora, affidarsi alla tabella hash. Non
+         si sono registrate variazioni di efficienza ma il nuovo sistema e'
+         piu' semplice e flessibile.
+99/8/24  Corretto meccanismo di identificazione delle minacce in seguito 
+         all'effettuazione di null move: c'e' una minaccia se la ricerca 
+         restituisce un punteggio di tipo "matto subito" e non "matto 
+         inflitto".
+99/8/24  Aggiunta primitiva funzione di valutazione della sicurezza del re:
+         l'unico parametro di valutazione e' la compattezza dello schermo di
+         Pedoni dopo l'arrocco.
+99/8/23  Nel finale, per valutare la posizione del re, si tiene ora conto della
+         distanza dello stesso dagli angoli della scacchiera (oltre che dal
+         centro).
+99/8/13  Modificati i criteri di valutazione della posizione del Cavallo:
+         - precedentemente il Cavallo riceveva un bonus per la posizione
+           centralizzata ed una penalita' per la dislocazione sul bordo della
+           scacchiera; ora si assegna un bonus decrescente con la distanza
+           dal centro (nullo sul bordo della scacchiera);
+         - l'avamposto di Cavallo riceve un bonus variabile con la posizione
+           dell'avamposto (n volte la bonta' della posizione occupata dal
+           Cavallo); in precedenza si assegnava un bonus costante.
+99/8/13  Da questo momento lo sviluppo sotto Linux avviene col gcc versione
+         2-95. Le prime prove evidenziano un sensibile incremento di velocita'
+         (se si utilizzano le opzioni -mcpu=k6 -march=k6 si ottiene un 
+         incremento di velocita' del 10-12%).
+99/8/5   Attivato il codice di gestione delle estensioni anche per mosse a 
+         livello 0 nell'albero di ricerca.
+99/7/26  Introdotto lo switch di compilazione LAZY_EVAL.
+99/7/26  Modificati i criteri di estensione per spinte di Pedone: si estende
+         la ricerca per spinte che portano il Pedone sulla traversa di 
+         promozione o su quella precedente (indipendentemente dal fatto che
+         il Pedone si passato o meno).
+99/7/25  Aumentata la null move depth reduction in corrispondenza di null
+         move effettuate a distanze superiori ai 6 ply dalle foglie dell'albero
+         di ricerca.
+99/7/25  Portata a 3/4 di ply l'estensione per sequenze di catture su stessa
+         casella: questo valore fa si che la prima volta che si presentano le
+         condizioni di attivazione dell'estensione non si faccia nulla ma le
+         successive tre volte si estenda la ricerca di un ply; attualmente 
+         tutte le estensioni importanti (scacchi esclusi) utilizzano questo
+         livello di estensione che garantisce di non estendere eccessivamente
+         la ricerca quando non c'e', effettivamente, qualcosa di importante (a
+         questo proposito vedere il commento della versione 11.2 di Crafty).
+99/7/24  Modificati i criteri di valutazione dei Pedoni passati: in precedenza
+         si dava un bonus per Pedoni avanzati (passati o meno, mediogioco o 
+         finale) ed un bonus per Pedoni passati; ora si e' diminuito il bonus 
+         per Pedoni avanzati (limitandolo al solo finale) e si assegna un 
+         bonus per Pedoni passati variabile in base alla distanza per la 
+         promozione (dal 2% al 64% del valore di un Pedone).
+99/7/24  Piccole modifiche al codice di gestione delle tabelle hash.
+-------------------------------------------------------------------------------
+99/7/22  Nuova REVISIONE 0.6.4: rappresenta un consolidamento delle capacita'
+         gia' presenti nella versione precedente. Da questo momento verranno
+         effettuate numerose aggiunte/modifiche alla funzione di valutazione.
+-------------------------------------------------------------------------------
+99/7/22  Aggiunta estensione della ricerca per spinte di Pedone passato 
+         effettuate durante il mediogioco.
+99/7/21  L'aggiornamento della struttura tabella_pedoni avviene ora 
+         progressivamente e non al raggiungimento delle posizioni terminali
+         della albero di ricerca. Questa modifica ha prodotto un lieve 
+         incremento di velocita'.
+99/7/21  Da questo momento lo sviluppo del programma avverra' su di un AMD 
+         K6III a 450Mhz.
+99/6/26  Riscritta la classe tabella_pedoni in modo totalmente 'bitboard
+         oriented'. Nel contempo totalmente modificata la valutazione delle
+         strutture pedonali. La combinazione dei nuovi algoritmi e delle nuove
+         strutture dati ha prodotto un incremento di prestazioni pari al 15%.
+99/6/26  Esteso il codice di riconoscimento della patta per insufficienza di
+         materiale: vengono ora riconosciuti anche i finali KNK e KBK.
+99/6/16  Aggiunti nuovi blocchi di codice per calcolare statistiche sulle
+         estensioni effettuate durante la ricerca (tutto disabilitabile 
+         mediante il normale flag FAST).
+99/6/13  Prima di generare le mosse, se la posizione attuale e' memorizzata
+         nella tabella hash, si tenta la mossa suggerita. Spesso avviene che
+         detta mossa provochi un taglio beta evitando cosi' di perdere tempo
+         per la generazione.
+99/6/7   Modificate le condizioni di effettuazione delle null move, in 
+         particolare:
+         (a) non vengono mai effettuate null move in posizioni in cui ci sono 
+             solo Pedoni;
+         (b) e' stato innalzato il limite riguardante il numero dei pezzi che
+             determina la disattivazione delle null move; la null move viene
+             comunque effettuata se abbastanza vicina alle foglie dell'albero
+             di ricerca.
+99/6/7   Esteso il supporto per la direttiva bm nei file .epd: vengono ora 
+         riconosciuti anche consigli multipli.
+99/6/3   Modificato il modulo test_vgm in modo che registri informazioni anche
+         sul funzionamento della funzione calcola_catture.
+99/6/2   Aggiunto il riconoscimento della patta per insufficienza di materiale.
+99/6/2   Numerose modifiche al sorgente del programma per sfruttare le nuove
+         caratteristiche dell'ISO C++.
+99/5/27  Installata la versione 1.1.2 del compilatore Egcs C++. Grazie alla
+         maggiore conformita' allo standard del nuovo compilatore sono
+         stati eliminati molti 'workaround' prima necessari nel codice
+         sorgente.
+99/5/27  Cambiati i parametri di compilazione: il nuovo compilatore Egcs, 
+         quando invocato con lo switch -march=pentiumpro, genera codice non
+         compatibile con l'AMD K6-2 3D.
+99/5/16  Migliorata la rappresentazione della classe supporto_ricerca (al
+         fine di massimizzare la cache hit rate). Nel contempo scoperta 
+         situazione in cui si rendeva inutile controllare se il Re era sotto
+         scacco:
+           pos1--mossa1-->pos2--nullmove-->pos3
+         la legalita' di mossa1 implica che il giocatore che muove in pos3 non
+         e' sotto scacco.
+99/5/16  Migliorata la gestione delle estensioni in corrispondenza di catture
+         multiple.
+99/5/8   D'ora in poi, qualora la funzione tabella_hash::find non trovi, nella
+         tabella delle trasposizioni, la posizione passatale come argomento, 
+         verra' esplicitamente cancellata la mossa suggerita dalla tabella
+         hash. In precedenza la funzione si limitava a non suggerire nessuna
+         mossa, ovvero, a mantenere l'ultimo suggerimento dato (magari in una
+         posizione totalmente diversa) con conseguente perdita di tempo per
+         la ricerca di una mossa suggerita quasi sempre illegale.
+99/5/8   Corretto un bug relativo al recupero dalla tabella hash della miglior
+         mossa registrata: nelle situazioni in cui la posizione da analizzare
+         e' memorizzata contemporaneamente nei due livelli della tabella hash,
+         bisogna preferire la mossa suggerita dall'elemento di livello 0 (in
+         quanto sicuramente derivante da una ricerca di profondita' maggiore) e
+         ricorrere a quella di livello 1 solo se non si hanno altri 
+         suggerimenti.
+99/5/7   Visto che non risulta difficile, durante la ricerca si rilevano le 
+         posizioni di tipo fail low in cui esiste una unica mossa legale e si
+         registra l'informazione nella hash table cosi' da poter estendere la
+         ricerca nel caso la posizione si ripresenti.
+-------------------------------------------------------------------------------
+99/5/6   Nuova REVISIONE 0.6.3: questa versione e' sostanzialmente piu' forte
+         della precedente: in particolare l'abilita' tattica e' notevolmente
+         superiore. Sembra risolto il bug del mancato riconoscimento delle
+         patte per ripetizione di posizione (il problema nasceva dalla
+         applicazione di null move in posizione con possibile zugzwang e da
+         problemi che limitavano l'estensione della ricerca in alcune 
+         situazioni). Col tempo si fa sempre piu' pressante la necessita' di
+         intervenire sulla funzione di valutazione; a questo proposito va
+         notato che sono falliti i tentativi di automatizzare l'identificazione
+         (ovvero renderla dinamica) degli intervalli di variazione delle
+         componenti della funzione di valutazione. Resta pero' promettente la
+         possibilita' di variare dinamicamente l'ordine di esecuzione delle
+         funzioni componente.
+-------------------------------------------------------------------------------
+99/5/6   Ulteriori profonde modifiche alla funzione di gestione delle 
+         estensioni:
+         - si e' eliminato il razoring;
+         - si sono ridotte le estensioni per le posizioni indicate come
+           interessanti dalla tabella hash;
+         - si e' aumentata l'estensione per le posizioni con Re sotto scacco;
+         - si e' aggiunto il riconoscimento delle situazioni a risposta unica;
+         - nelle situazioni in cui si e' raggiunta una profondita' consistente,
+           rispetto alla profondita' prevista dalla iterazione attuale, non
+           si interrompe piu' bruscamente la ricerca ma si disabilitano le
+           estensioni da quel punto in poi;
+         - si e' cambiato il modo di estendere la ricerca in presenza di 
+           scacchi: si estende in corrispondenza di mosse che danno scacco e
+           non piu' in posizioni in cui si e' sotto scacco (sembra quasi la
+           stessa cosa ma questa semplice modifica comporta un incremento di
+           abilita' tattica impressionante: WAC da 262 a 280 e sostanziale
+           decremento del time to solution).
+99/5/5   Modificata la gestione delle estensioni: nel finale si estende la 
+         ricerca, in seguito a spinte di Pedone, in modo inversamente 
+         proporzionale rispetto alla distanza dalla promozione. Eliminato il
+         bonus per la promozione del Pedone (o, per meglio dire, "parzialmente
+         incorporato" nella nuova euristica).
+99/5/3   Modificato il sistema di calcolo della velocita' media (average nps):
+         dal calcolo della media vengono esclusi il valore massimo e quello
+         minimo (utile per suite con pochi test).
+99/5/2   Corretto bug nella funzione distanza(posizione,posizione): la distanza
+         fra due posizioni e' il massimo, e non la somma, fra distanza
+         verticale ed orizzontale.
+99/5/2   Numerose modifiche al codice sorgente tese a migliorare i sistemi di
+         self checking.
+99/5/2   Introduzione del nuovo modulo fase.cpp.
+99/4/21  Modificata la funzione insert_best del modulo tabella_hash: quando si
+         inserisce una posizione in cui tutte le mosse possibili hanno condotto
+         ad un fail low, ci si assicura che non venga memorizzata alcuna mossa
+         suggerita (ovvero che venga memorizzato l'indicatore sentinella).
+         Con questo modo di procedere si e' riscontrata una diminuzione del
+         10%, circa, del numero di nodi esaminati per una ricerca a profondita'
+         fissa (test standard, profondita' di ricerca 7).
+99/4/18  Eliminato bug dal modulo nodo_apertura: se una variante risultava
+         giocata zero volte si produceva una divisione per zero col risultato
+         di invalidare le statistiche connesse alla variante.
+99/4/18  Riscritta buona parte del programma JBook: la nuova versione gestisce
+         correttamente (?) file .PGN con sottovarianti ricorsive. In questo
+         modo e' possibile preparare semplici librerie di apertura a partire
+         da una partita con 'molte' varianti.
+99/4/10  Modificato il modulo situazione_valutata in modo da evitara il calcolo
+         del massimo delle somme parziali ad ogni chiamata alla funzione di
+         valutazione.
+99/4/10  Creato il nuovo programma JStat. Questa utility raccoglie informazioni
+         statistiche su aspetti relativi alla valutazione della posizione
+         mediante l'analisi di raccolte di posizioni in formato epd.
+99/4/10  Ulteriori piccole modifiche al modulo lista_pezzi al fine di 
+         aumentarne l'efficienza/compattezza.
+99/4/10  Alterate le condizioni in cui si effettuano le null move: in 
+         precedenza, per evitare il problema dello zugzwang, ci si assicurava 
+         che il numero di pezzi presenti sulla scacchiera fosse maggiore di un
+         certo numero critico. Questo modo di procedere risultava, spesso, poco
+         significativo in quanto sono, prevalentemente, i pezzi diversi dai
+         Pedoni a determinare la probabilita' di zugzwang (ed infatti ora ci si
+         basa solo sul numero di questi ultimi).
+99/4/10  Modificato il modulo lista_pezzi in modo che sia sempre mantenuto a
+         disposizione il numero di pezzi, detti ufficiali, diversi dai Pedoni,
+         presenti sulla scacchiera.
+99/4/9   Modificata la formula di aggiornamento dell'euristica storica: 
+         l'addendo ora utilizzato e' (d/unita)^2 e non il semplice d (essendo
+         d la profondita' in "unita" che resta da analizzare rispetto alla
+         posizione corrente). Alcuni test eseguiti sulla suite WAC evidenziano
+         una leggera diminuzione del time to solution.
+-------------------------------------------------------------------------------
+99/4/6   Nuova REVISIONE 0.6.2: il programma ha subito numerosi cambiamente
+         rispetto alla precedente revisione. Questi cambiamenti sono stati
+         tesi principalmente a migliorare la stabilita' del programma e la
+         chiarezza/compattezza/standardizzazione del sorgente. Contrariamente
+         a quanto precedentemente pianificato non verra', probabilmente,
+         implementata l'aspiration search in quanto raffronti effettuati da 
+         Bruce Moreland fra questa tecnica e la normale PVS non hanno 
+         evidenziato differenze significative (a fronte di una, sensibile,
+         maggior complessita' del codice sorgente).
+-------------------------------------------------------------------------------
+99/4/6   Aggiunta la modalita' di test veloce: se, durante l'esecuzione di un
+         test, il programma fornisce la corretta risposta per due iterazioni
+         consesutive, il test viene considerato risolto.
+99/4/6   Potenziate le funzioni disponibili sulla linea comando mediante
+         l'aggiunta dello switch -book_name. Modificato lo switch -book in
+         -book_mode.
+99/4/1   Modificata la funzione info_ricerca::nps() in modo da non generare
+         nps erronei per ricerche di durata inferiore alla minima rilevabile
+         dalla funzione di misurazione del tempo.
+99/3/28  Leggendo un newsgroup su Linux ho scoperto per caso l'esistenza
+         dell'opzione -march="cpu" (valida per il compilatore egcs); questa
+         opzione serve ad informare il compilatore che non si e' interessati a
+         mantenere la compatibilita' dell'eseguibile con versioni del
+         microprocessore precedenti a "cpu" (ed abilitandolo quindi a generare
+         istruzioni specifiche, contrariamente a -m"cpu" che si limita a 
+         riordinare le istruzioni ed allinearle opportunamente). La coppia di
+         direttive -mpentiumpro -march=pentiumpro ha generato codice del 13% 
+         piu' veloce.         
+99/3/28  Varie modifiche al codice sorgente: 
+         - eliminate nel tutte le direttive "using namespace...":
+         - cambiata modalita' di descrizione/configurazione dell'ambiente di 
+           compilazione/esecuzione;
+         - piccole modifiche per eliminare incompatibilita' con il compilatore
+           Microsoft Visual C++ 6 (SP2);
+         - eliminato codice assembler inline per il conteggio dei bit settati
+           in un unsigned (il nuovo sistema basato su tabelle lo rendeva del 
+           tutto inutile);
+         - aggiunto codice assembler inline per il calcolo della funzione
+           valore assoluto (ABS).
+99/3/26  Da questo momento lo sviluppo del programma avverra' su di un AMD K6-2
+         3D 400Mhz. Le prime conseguenze del cambiamento sono una serie di
+         modifiche al codice dei test che risultava funzionare solo per 
+         sistemi a velocita' inferiore.
+99/3/15  Ultimata la riscrittura del modulo di gestione del tempo. Sebbene
+         l'assegnazione del tempo sia ancora fondamentalmente lineare, e' stato
+         realizzato un meccanismo per gestire il tempo utilizzato in eccesso
+         rispetto a quanto inizialmente programmato; e' stata aggiunta una 
+         modalita' di gestione delle situazioni di zugzwang. La riscrittura ha
+         comportato modifiche anche al modulo secondi. La nuova organizzazione
+         del codice sorgente e' piu' chiara e, apparentemente, robusta.
+99/2/26  Scoperta una imprecisione nella funzione di identificazione delle
+         patte per ripetizione di posizione: fra le posizioni considerate non
+         c'era quella ad inizio ricerca. Con l'occasione modificata l'intera
+         funzione. In alcune posizioni, nel finale, la differenza e' sensibile.
+         Va comunque ricordato che la funzione non e' ancora del tutto precisa
+         in quanto in una posizione test non si riesce ad individuare la
+         patta.
+99/2/18  Aggiunto alla funzione di valutazione un termine per valutare gli
+         avamposti di Cavallo (in senso stretto non si tratta di avamposti
+         perche' viene assegnato un bonus a Cavalli su case deboli in 
+         territorio nemico senza che dette case siano fissate; l'idea e' che
+         il programma, cercando di mantenere il pezzo sulla casa debole, tenda
+         a fissarla).
+99/2/18  Semplificato e riorganizzato il codice sorgente (sono stati resi
+         privati alcuni array precedentemente ad accesso pubblico, sono state
+         riscritte in maniera piu' chiara alcune funzioni di I/O).
+99/2/17  Modificati i moduli situazione_valutata e tabella_pedoni in modo da
+         semplificare il primo ed incorporare nel secondo la logica di
+         valutazione della struttura pedonale. Questa modifica ha permesso di
+         velocizzare leggermente la funzione di valutazione (unitamente al
+         fatto che si e' passati ad usare tabelle precalcolate).
+99/2/14  Esplicitate tutte le direttive di cast mediante il nuovo comando
+         static_cast<*>(*). Risulta ora immediato identificare i punti in
+         cui si forza il compilatore a generare codice di conversione (punti
+         in cui da sempre si annidano bug).
+99/2/14  Sostituiti tutti i passaggi per riferimento costante di strutture
+         dati elementari con passaggi per valore. Questa modifica dovrebbe
+         consentire ai compilatori una maggior possibilita' di sfruttare i
+         registri del microprocessore.
+99/2/14  Modificata la funzione di ricerca di quiescenza e la funzione di
+         generazione delle catture. Col nuovo sistema adottato non vengono
+         ne' generate ne' analizzate le mosse di cattura che non portano
+         la valutazione della posizione entro una certa distanza da alpha.
+         L'effetto riscontrato consiste nella (ovvia) diminuzione dei nodi
+         di quiescenza (25% circa) accompagnata da una diminuzione apparente
+         di velocita' (nps diminuito del 10% circa); come evidenziato da alcuni
+         test questa diminuzione e' solo apparente perche' il "time to 
+         solution" e' leggermente diminuito.
+99/2/8   Potenziato il modulo test: durante l'esecuzione dei test vengono 
+         raccolti ed elaborati molti dati in piu' (time to solution, average
+         depth...).
+99/2/7   Attivata una nuova versione del razoring: se il giocatore che deve
+         effettuare l'ultima mossa prima dell'inizio della ricerca di 
+         quiescenza e' in svantaggio, ed il gestore delle estensioni non ha
+         attivato nessuna estensione, si evita la mossa in questione e si
+         passa immediatamente alla ricerca di quiescenza.
+99/2/7   Modificata la funzione di gestione delle estensioni: tutte le 
+         estensioni adottate nel mediogioco vengono ora adottate anche in 
+         apertura (ma non e' vero l'opposto).
+99/2/6   Piccole modifiche alle funzioni di selezione delle mosse durante la
+         ricerca. Il codice, funzionalmente equivalente al precedente, e' ora
+         piu' semplice. Dopo numerosi test e' stata, momentaneament, 
+         accantonata la tecnica suggerita da Robert Hyatt consistente nel 
+         tentare la mossa hash prima di generare le mosse pseudolegali; i 
+         tagli beta provocati dalla mossa suggerita non erano sufficienti a 
+         compensare l'aumento di complessita' delle funzioni di selezione 
+         delle mosse.
+99/2/6   Eliminato un bug nella funzione di riconoscimento delle mosse legali:
+         durante il controllo della legalita' di mosse di Pedoni posti sulle
+         colonne esterne della scacchiera potevano generarsi posizioni 
+         illegali.
+99/2/3   Modificata la gestione della chiave hash: quando cambia il giocatore
+         attivo si effettua la negazione logica della chiave (prima si
+         eseguiva lo xor con un valore generato, una tantum, casualmente). Il
+         nuovo sistema sembra piu' preciso e leggermente piu' veloce 
+         (supponendo che la chiave hash sia in un registro non si richiedono
+         accessi alla memoria).
+-------------------------------------------------------------------------------
+99/1/28  Nuova REVISIONE 0.6.1: rispetto alla precedente revisione non sono
+         state aggiunte nuove caratteristiche o potenzialita' importanti. Il
+         programma e' stato comunque migliorato sotto l'aspetto della 
+         velocita', della robustezza e dell'organizzazione del codice sorgente.
+-------------------------------------------------------------------------------
+99/1/28  Aggiunti nuovi test alla suite di controllo. Corrette alcune posizioni
+         erroneamente codificate.
+99/1/28  Modificato e potenziato il modulo per l'esecuzione dei test.
+99/1/25  Modificato il codice di controllo della legalita' delle mosse. Il
+         sistema precedente consisteva nel generare tutte le mosse legali e,
+         quindi, verificare se fra esse vi era quella da dubbia; ora si
+         utilizza una funzione ad hoc assai piu' veloce (principalmente
+         perche' non genera le mosse di tutti i pezzi).
+99/1/20  Piccole ottimizzazioni nel codice sorgente.
+99/1/16  Introdotto il nuovo modulo supporto_ricerca. Questo modulo incapsula
+         le informazioni che dirigono la ricerca in corso e si occupa della
+         gestione delle estensioni.
+99/1/16  Introdotto un meccanismo di controllo delle estensioni: se la ricerca
+         in corso ha una profondita' prevista di n semimosse, le estensioni la
+         possono portare al piu' a 2*n semimosse. Questa semplice limitazione
+         non ha portato nessun problema evidente permettendo, nel contempo, una
+         sensibile diminuzione dei nodi analizzati.
+99/1/7   Modificata la classe lista_ripetizioni (eliminata allocazione dinamica
+         della memoria in favore di una struttura basata sui template analoga a
+         quella della classe variante_principale).
+99/1/6   Resa disponibile una versione in assembler della funzione per il
+         conteggio dei bit settati in un unsigned (per ora solo VC++).
+99/1/6   Modificata la struttura del codice sorgente in modo da renderla piu'
+         modulare (introduzione del file configurazione.hpp).
+99/1/4   Ritorno al precedente sistema di interruzione delle ricerche: quando
+         si interrompe la ricerca bisogna interrompere l'aggiornamento delle
+         informazioni, non basta cha la funzione di ricerca restituisca +inf
+         per esser sicuri che il programma non aggiorni la variante principale
+         (come accaduto in una partita sfortunata).
+99/1/4   Totalmente modificato il sistema di esecuzione dei test: un apposito
+         modulo gestisce ora le suite di test raccogliendo informazioni 
+         riepilogative dettagliate. Lo stesso modulo si occupa anche della
+         gestione dei test di funzionamento del programma.
+98/12/31 Modificata la procedura di ricerca della quiescenza ottenendo in
+         guadagno di velocita' del 5%.
+98/12/30 Piccole modifiche al codice sorgente al fine di migliorarne la 
+         leggibilita' e correttezza.
+98/12/15 Corretti alcuni bug nella funzione di valutazione.
+-------------------------------------------------------------------------------
+98/12/10 Nuova VERSIONE 0.6.0: si comincia a vedere un programma che gioca
+         discretamente. E' necessario potenziare ulteriormente la funzione di
+         valutazione (specialmente per quanto riguarda la sicurezza del re) ed
+         effettuare numerosi test per tarare alcuni algoritmi ed identificare
+         le debolezze di gioco. Si comincia inoltre a sentire la necessita' di
+         ottimizzare il codice per compensare la diminuzione di velocita'
+         dovuta alla maggior complessita' dell'analisi. E' stata 
+         momentaneamente accantonata la decisione di ricorrere all'MTD. E'
+         invece in procinto di essere adottata la tecnica dell'ETTC.
+-------------------------------------------------------------------------------
+98/12/10 Riscritte le funzioni di valutazione in modo da basarsi sul concetto
+         di LAZY EVALUTATION. Anche se Ed Shroder ne sconsiglia l'uso, il 
+         fatto che venga utilizzata senza problemi in Crafty e che 
+         l'esperienza accumulata con Joker, cosi' come i test preliminari 
+         effettuati con Joker++, non abbiano evidenziato effetti collaterali,
+         ha portato ad adottarla (anche se ancora non ben tarata permette
+         incrementi di velocita' del 20%).
+98/12/10 Disattivato l'uso di default del RAZORING. Anche se questa tecnica
+         portava ad una diminuzione dei nodi analizzati si rivelava, nella
+         forma adottata, notevolmente imprecisa nelle posizioni tattiche.
+98/12/9  Aggiunti nuovi termini di valutazione: Pedoni arretrati, Pedoni 
+         isolati, Pedoni passati (e predisposizione per case deboli, Alfieri
+         cattivi, Pedoni doppiati).
+98/11/9  La struttura pedonale non viene piu' calcolata in modo incrementale. 
+         Cosi' facendo si e' velocizzata l'esecuzione della funzione muovi e 
+         si e' semplificato il codice dei moduli situazione e tabella_pedoni.
+         La funzione di valutazione della posizione ha pero' subito una 
+         sensibile diminuzione di velocita' (la nuova organizzazione permette,
+         comunque, una piu' agevole realizzazione di una tabella hash
+         specializzata per la struttura pedonale; i dati dichiarati da Hyatt
+         riguardo a Crafty inducono a pensare che la tabella hash dei Pedoni
+         dovrebbe portare ad un notevole aumento di velocita').
+98/12/7  Riscritto il Makefile in modo da rigenerare automaticamente le
+         dipendenze dei file oggetto dai file sorgente dopo modifiche o
+         aggiunte a questi ultimi. E' stato inoltre aggiunto il supporto per
+         il profiling mediante il programma gconv.
+98/12/6  Aggiunto il supporto per la modalita' di analisi mediante X(Win)board.
+98/12/1  Cambiato il meccanismo di gestione del tempo. Si e' abbandonato l'uso
+         della funzione clock, perdendo cosi' i vantaggi dell'aderenza allo
+         standard, poiche' non era possibile svincolare la misurazione del
+         tempo dalla percentuale di carico del microprocessore. Non e' stato
+         possibile ricorrere ad altre funzioni della libreria ISO C++ in 
+         quanto nessuna garantiva una risoluzione sufficiente. Per evitare il
+         "proliferare" di codice non standard (in verita', per ora, due sole
+         funzioni) si e' creato un file nonstd.hpp in cui definire ogni 
+         funzione dipendente dall'ambiente di esecuzione o sviluppo.
+98/11/30 Ulteriormente potenziato il supporto epd (codici c1-c9).
+98/11/22 Potenziata la modalita' di esecuzione test di Joker (vengono ora 
+         riconosciuti gli opcode "id" e "bm", gli switch -st e -sd).
+98/11/22 Aggiunto il supporto per ricerche null window alla funzione base di
+         ricerca. Si e' riscontrata una consistente diminuzione nel numero di
+         nodi esaminati.
+98/11/18 Aggiunto il riconoscimento della patta per ripetizione della posizione
+         durante la ricerca. Il riconoscimento e' approssimativo (come del
+         resto in Crafty): se l'attuale posizione e' gia' stata raggiunta,
+         anche una sola volta, durante la variante in fase di analisi, la 
+         posizione viene giudicata patta.
+98/11/16 Aggiunto un termine alla funzione di valutazione per penalizzare
+         l'allontanamento del re, forzato o volontario, durante l'apertura od
+         il mediogioco, dalla traversa base.
+98/11/15 Eliminato bug nel riconoscimento della patta per la regola delle 50
+         mosse.
+98/11/13 Modificato il codice delle funzioni muovi e muoviq in modo da renderlo
+         piu' chiaro, robusto e predisposto per l'esecuzione parallela. Come
+         effetto collaterale e' stato possibile eliminare aggiornamenti inutili
+         di campi della classe situazione in caso di mosse illegali.
+98/11/12 Eliminato bug nella funzione muovi riguardante l'errato aggiornamento
+         della chiave hash in caso di promozione.
+98/11/11 Realizzate modifiche al sorgente tese a migliorare il mascheramento
+         dell'informazione e la modularita' del programma.
+-------------------------------------------------------------------------------
+98/11/8  Nuova REVISIONE 0.5.5: questa versione di Joker comincia ad essere
+         accettabile; la libreria di apertura e le tabelle hash sembrano
+         funzionare a dovere. Le aggiunte importanti ancora da realizzare
+         riguardano la ricerca MTD (per cui la struttura del programma e' gia'
+         adatta), l'aggiunta di termini di valutazione riguardanti la sicurezza
+         del Re e la struttura pedonale, la possibilita' del programma di
+         analizzare durante il turno avversario. Bisogna, inoltre, migliorare
+         la gestione del tempo di riflessione ed il bilanciamento dei pesi.
+-------------------------------------------------------------------------------
+98/11/8  All'inizio di ogni ricerca viene valutata per prima la precedente 
+         variante principale (principal variation search). In questo modo si
+         dovrebbero ottenere prima buone limitazioni su alpha e beta. La
+         diminuzione di nodi analizzati e', comunque, stata limitata.
+98/11/8  Corretto bug che impediva il corretto riconoscimento della patta per
+         stallo.
+98/11/7  La funzione prima_mossa considera ora, come migliore, se disponibile,
+         la mossa memorizzata nella hash table. Questo garantisce un netto
+         miglioramento nel riordino delle mosse ed un conseguente calo evidente
+         dei nodi analizzati.
+98/11/6  Solo nella funzione prima_mossa, se due catture ricevono la stessa
+         valutazione, l'elemento discriminante diventa il valore dell'euristica
+         storica associato. In seguito a questa modifica e' misteriosamente
+         scomparso il bug nella compilazione ottimizzata del programma col
+         Visual C++ 5.
+98/11/6  Ora anche le posizioni derivanti da null move vengono inserite nella
+         tabella hash, in questo modo si e' incrementata la hit rate.
+98/11/5  Grazie alle tabelle hash si evita ora di effettuare una null move in
+         in posizioni dove questo sistema si era precedentemente rivelato
+         inutile.
+98/11/4  Aggiunto supporto per le tabelle hash. Per ora vengono utilizzate
+         tabelle hash a due livelli, chiavi hash di 64bit e 64bit di
+         informazione per posizione. In seguito a questa aggiunta si e'
+         scoperto un bug nell'ottimizzatore del Visual C++ 5 (od almeno spero:
+         il test di ricerca segnala lo stesso numero di nodi esaminati se il
+         sorgente del programma viene compilato col Borland C++ Builder 3, con
+         l'Egcs 1.02 e con il Visual C++ 5 senza ottimizzazioni ma un diverso
+         numero di nodi con il Visual C++ 5 piu' le ottimizzazioni di 
+         velocita').
+98/11/3  Modificata l'implementazione della tabella di euristica storica in
+         modo da svincolarla dal tipo valutazione (in particolare dal fatto
+         che -inf <= valutazione <= +inf, con relativi problemi di overflow in
+         seguito a ricerche profonde).
+98/10/31 Potenziato il programma jbook: si possono ora fondere librerie di
+         apertura e creare librerie senza statistiche iniziali (utili per
+         l'apprendimento libero).
+98/10/29 Eliminato bug nella funzione di conversione delle mosse dal formato
+         SAN a quello interno: gli arrocchi seguiti da ulteriori simboli (per
+         esempio O-O+, O-O-O!) non venivano correttamente convertiti.
+98/10/28 Velocizzata la creazione del libro di aperture a partire da un 
+         database di partite (la fusione delle linee di apertura avviene ora
+         nella memoria principale).
+98/10/27 Aggiunta l'opzione -tree a jbook: questa opzione visualizza l'albero
+         di apertura associato ad un libro.
+98/10/27 Corretto un bug nella funzione di fusione dei libri di apertura (il
+         programma jbook non funzionava correttamente con l'opzione cut).
+98/10/25 Aggiunta alla normale modalita' di gioco tramite X(Win)Board la
+         modalita' di esecuzione test.
+98/10/23 Aggiunto il supporto per la visualizzazione con X(Win)Board di
+         informazioni riguardanti l'apertura.
+98/10/23 Eliminato bug riguardante la libreria di aperture: veniva registrato
+         il numero di mosse memorizzate -1; accadeva cosi' che in seguito al 
+         riordinamento si potessero creare accessi scorretti alla memoria.
+98/10/22 Modificata la struttura del codice sorgente dei moduli interfaccia e
+         di main in modo da rendere il programma piu' leggibile e semplice da
+         modificare.
+-------------------------------------------------------------------------------
+98/10/16 Nuova REVISIONE 0.5.4: il programma e' ancora debole in quanto non
+         vengono utilizzate le tabelle hash, la funzione di valutazione e'
+         ridicola (manca soprattutto la gestione della struttura pedonale), il
+         bilanciamento dei pesi di valutazione approssimativo. Comunque viene
+         ora gestito un libro di apertura e non paiono esserci grossi problemi
+         di stabilita'. Il sistema di organizzazione della libreria di apertura
+         (chiavi hash ordinate) permette di verificare il funzionamento di
+         parte del codice che, in seguito, verra' utilizzato per le tabelle
+         hash e sembra garantire, in unione con l'algoritmo di ricerca per
+         estrapolazione, una buona velocita' di recupero delle posizioni e
+         nessuno spreco di spazio (al prezzo della lentezza di creazione del
+         libro stesso). 
+-------------------------------------------------------------------------------
+98/10/16 Cambiamenti nel codice sorgente al fine di renderlo piu' modulare e
+         semplice da controllare.
+98/10/16 Cambiato sistema di riordino mosse in favore di quello utilizzato da
+         GNUChess: diminuzione netta (35%) dei nodi di quiescenza esaminati dal
+         programma.
+98/10/15 Eliminati alcuni bug nella gestione della libreria di apertura (bug
+         legati a situazioni limite di posizioni senza mosse o libri di
+         apertura vuoti).
+98/10/13 Ritorno al sistema dei socket per la comunicazione con X(Win)Board:
+         la pratica ha confermato l'adagio "chi lascia la strada vecchia per la
+         nuova sa quel che lascia, non sa quel che trova".
+98/10/10 Eliminato bug nella funzione san: quando non c'erano mosse legali la
+         funzione accedeva scorrettamente alla memoria.
+98/10/10 Eliminato bug nella funzione calcola_legali: quando non c'erano mosse
+         pseudolegali la funzione accedeva scorrettamente alla memoria.
+98/10/10 Joker e' ora in grado di utilizzare le librerie di apertura in modi
+         diversi: scegliendo linee a caso, scgliendo le varianti piu' famose,
+         scegliendo le linee 'migliori'. La prima modalita' d'uso viene 
+         attivata quando Xboard manda il comando random.
+98/10/7  Terminata la versione preliminare di jbook, il programma per la 
+         gestione della libreria di aperture di Joker, e modificato Joker in
+         modo da far uso di libri di apertura. Attualmente un libro di apertura
+         e' una sequenza ordinata di record aventi come chiave il codice hash
+         della posizione. L'accesso al libro avviene mediante ricerca con
+         interpolazione.
+98/10/6  Corretto bug dovuto alla ripetuta inizializzazione delle tabelle 
+         statiche utilizzate dai metodi della classe situazione_valutata: ogni
+         volta che veniva dichiarata una variabile di quella classe i bonus
+         posizionali vanivano sommati a quelli gia' presenti cosi' che, dopo
+         un certo numero di partite i termini posizionali venivano ad avere la
+         preponderanza su quelli materiali.
+98/10/5  Quando Joker viene compilato per ambiente Windows non fa piu' uso, 
+         come ancora sotto Unix, dei socket per comunicare con l'interfaccia; 
+         si utilizzano ora funzioni di libreria di Windows per la gestione 
+         dell'I/O della console. Il codice dell'interfaccia risulta cosi' piu' 
+         complesso ma lo scambio di informazione fra Winboard a Joker appare 
+         piu' stabile.
+98/9/16  Aggiunti nuovi parametri di valutazione: Torre su colonna semiaperta e
+         Re su colonna aperta.
+98/9/15  Joker ora riconosce ed utilizza la regola della patta dopo 50 mosse
+         durante le quali non si verificano catture o spostamenti di Pedone.
+-------------------------------------------------------------------------------
+98/9/7   Nuova REVISIONE 0.5.3: il programma sembra stabile ma mancano ancora
+         tantissime funzioni utili e la forza di gioco lascia ancora molto a
+         desiderare (soprattuto a causa della funzione di valutazione).
+-------------------------------------------------------------------------------
+98/9/7   Migliorate le strutture per la gestione del tempo.
+98/9/6   Migliorato il codice di gestione dei log file: maggior chiarezza,
+         maggior velocita', maggior numero di informazioni registrate.
+98/9/5   Aggiunto nuovo livello di compilazione per debug approfondito del
+         programma.
+98/9/5   Aggiunto supporto per la notazione algebrica.
+98/8/30  Modificato meccanismo delle null move: se la ricerca riporta che due
+         mosse consecutive permettono il matto, si estende la profondita' di
+         analisi della posizione; le null move non vengono piu' disabilitate 
+         quando si e' nel finale, bensi' quando il giocatore che deve muovere
+         ha meno di un certo numero di pezzi (in questo modo si considera un
+         parametro piu' attinente al problema dello zugswang). In ogni caso sia
+         il livello di estensione sia il numero di pezzi limite dovranno essere
+         assai meglio tarati.
+98/8/29  Eliminato bug legato alle null move: non azzerando la casa di cattura
+         en passant, in seguito ad una null move si potevano generare catture
+         en passant scorrette con conseguente perdita di consistenza fra le
+         varie strutture di descrizione della scacchiera.
+98/8/25  Realizzato il sistema di gestione null move.
+-------------------------------------------------------------------------------
+98/8/20  Nuova REVISIONE 0.5.2: sovvertito il modello di valutazione della 
+         posizione: dal "modello Fritz", in cui non si effettua la valutazione
+         nelle foglie ma ad ogni mossa, si e' passati al modello standard. A
+         fronte di una leggera diminuzione di velocita' si e' ottenuta una 
+         maggiore chiarezza e semplicita' del codice. Inoltre risulta ora piu'
+         semplice realizzare un sistema di autoapprendimento.
+-------------------------------------------------------------------------------
+98/8/10  Nuova REVISIONE 0.5.1: eliminato un bug nella valutazione del 
+         materiale dopo promozione e nella gestione di catture en passant. 
+         Migliorato supporto Xboard. Divisione della procedura di ricerca per
+         il nodo radice (in cui si esegue ora una migliore procedura di 
+         riordino) ed i restanti nodi. Diminuito l'uso dello stack utilizzando
+         un sistema di chiamata della procedura di ricerca di quiescenza come 
+         in crafty; utilizzazione di un buffer esterno unificato (come in TCSP)
+         per la memorizzazione delle mosse.
+-------------------------------------------------------------------------------
+98/8/1   VERSIONE 0.5.0: prima versione parzialmente funzionante del programma.
+         Tutte le operazioni principali (generazione mosse, analisi...) sono 
+         legate a classi e strettamente controllate in ogni loro passo mediante
+         asserzioni. L'esperienza precedentemente maturata ha permesso un
+         progetto iniziale piu' chiaro e robusto. Allo stato attuale il 
+         programma si interfaccia con Xboard (Winboard) ed e' in grado di 
+         giocare una partita senza, pero', usare una libreria di aperture. Non 
+         esiste gestione del tempo e solo le funzionalita' indispensabili sono 
+         supportate. Il sorgente e' scritto in C++ "standard" (per quanto 
+         permesso dal fatto che non e' ancora stato approvato il documento 
+         finale dell'ISO) e viene compilato senza problemi dall' Egcs 1.02, 
+         dal Borland C++ Builder 3 e dal Visual C++ 5.
+-------------------------------------------------------------------------------
+98/7/1   Inizio sviluppo di un nuovo programma in grado di giocare a scacchi. 
+         Il progetto avra' il nome di Joker++ per evidenzare l'evoluzione 
+         rispetto al predecessore e l'adozione del linguaggio c++ per la 
+         realizzazione.

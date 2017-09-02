@@ -1,6 +1,6 @@
 # Joker
 
-** This software is not developed anymore **
+**This software is not developed anymore**
 
 Joker is a chess engine written at the end of '90s to study AI techniques
 for game programming.
