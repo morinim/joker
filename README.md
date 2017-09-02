@@ -8,4 +8,4 @@ for game programming.
 It's offered without support, as "historical" artifact, under the terms
 of the MIT license.
 
-Further details at http://www.eosdev.it/facile/
+Further details at http://www.eosdev.it/joker/
